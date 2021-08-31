@@ -17,11 +17,11 @@ public class NodeView : MonoBehaviour
             gameObject.transform.position = node.position;
 
             // Setting border
-            tile.transform.localScale = new Vector3(1f-borderSize, 1f-borderSize);
+            tile.transform.localScale = new Vector3(1f-borderSize, 1f,1f-borderSize);
         }
     }
 
-    private void ColorNode(Color color, GameObject go)
+    public void ColorNode(Color color, GameObject go)
     {
         if (go.TryGetComponent<Renderer>(out Renderer rend))
         {
@@ -29,7 +29,7 @@ public class NodeView : MonoBehaviour
         }
     }
 
-    private void ColorNode(Color color)
+    public void ColorNode(Color color)
     {
         ColorNode(color, tile);
     }
