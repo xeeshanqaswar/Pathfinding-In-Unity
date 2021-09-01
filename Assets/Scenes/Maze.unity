@@ -432,7 +432,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 10
   height: 5
-  mazeData: {fileID: 4900000, guid: b2af664c425098242883b38ccce40bc9, type: 3}
+  mazeData: {fileID: 0}
+  textureMap: {fileID: 0}
+  ResourcePath: Mapdata
 --- !u!4 &1752724388
 Transform:
   m_ObjectHideFlags: 0
