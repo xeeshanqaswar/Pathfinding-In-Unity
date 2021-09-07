@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Use data from MapData
+// Initialize the Nodes and map them on Mapdata's 2d Array 
+// Store all the nodes 
+// Store Wall Nodes separately
+
 public class Graph : MonoBehaviour
 {
     public Node[,] nodes;
@@ -11,6 +16,9 @@ public class Graph : MonoBehaviour
     private int[,] m_mapData;
     private int m_width;
     private int m_height;
+
+    public int Width { get { return m_width; } }
+    public int Height { get { return m_height; } }
 
     // Direction For neighbour Nodes.
     public static readonly Vector2[] allDirections =
@@ -91,6 +99,17 @@ public class Graph : MonoBehaviour
     public bool IsWithinBounds(int x, int y)
     {
         return (x >= 0 && x < m_width && y >= 0 && y < m_height);
+    }
+
+    public void ResetPreviousPathfinding()
+    {
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                nodes[x, y].Reset();
+            }
+        }
     }
 
 

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+// Result of this Script is 2d Array with 0s and 1s which define Map 
+// 0s define open Nodes while 1s define walls
+// Used this data in Graph.
+
 public class MapData : MonoBehaviour
 {
     public int width = 10;
