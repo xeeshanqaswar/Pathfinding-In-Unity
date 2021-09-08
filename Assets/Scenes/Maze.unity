@@ -260,8 +260,8 @@ MonoBehaviour:
   graph: {fileID: 1157168453}
   pathFinder: {fileID: 1933079199}
   startNode: {x: 0, y: 0}
-  goalNode: {x: 15, y: 3}
-  TimeStamp: 0.05
+  goalNode: {x: 62, y: 20}
+  TimeStamp: 0.005
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,7 +315,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 20
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -339,7 +339,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 7, y: 10, z: 4}
+  m_LocalPosition: {x: 32.1, y: 10, z: 17.71}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -437,7 +437,7 @@ MonoBehaviour:
   width: 10
   height: 5
   mazeData: {fileID: 0}
-  textureMap: {fileID: 0}
+  textureMap: {fileID: 2800000, guid: 8eed777a78fb63a4d9e873863ddd27e8, type: 3}
   ResourcePath: Mapdata
 --- !u!4 &1752724388
 Transform:
@@ -500,7 +500,11 @@ MonoBehaviour:
   goalColor: {r: 1, g: 0, b: 0, a: 1}
   frontierColor: {r: 1, g: 0, b: 1, a: 1}
   exploredColor: {r: 0.5377358, g: 0.5377358, b: 0.5377358, a: 1}
-  pathColor: {r: 0.2082592, g: 0.7053223, b: 0.9811321, a: 1}
+  pathColor: {r: 0.35506406, g: 0.74042594, b: 0.9528302, a: 1}
   arrowColor: {r: 0.8018868, g: 0.7905393, b: 0.7905393, a: 1}
   highLightColor: {r: 0.9811321, g: 0.89123183, b: 0.34709862, a: 1}
+  showIterations: 0
+  showColor: 1
+  showArrow: 1
+  exitOnGoal: 1
   isComplete: 0

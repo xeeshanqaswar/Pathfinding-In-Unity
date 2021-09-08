@@ -41,6 +41,10 @@ public class DemoController : MonoBehaviour
                 pathFinder.Init(graph, graphView, graph.nodes[startNode.x, startNode.y], graph.nodes[goalNode.x, goalNode.y]);
                 StartCoroutine(pathFinder.SearchRoutine(TimeStamp));
             }
+            else
+            {
+                Debug.LogError("DEMO CONTROLLER either Index is out of bound or Pathfinder is NUll");
+            }
 
         }
 

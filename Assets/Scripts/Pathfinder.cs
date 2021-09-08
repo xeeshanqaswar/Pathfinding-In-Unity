@@ -4,6 +4,9 @@ using UnityEngine;
 using System;
 using System.Linq;
 
+// BFS TREE : Explore each node before reaching goal. 
+
+
 public class Pathfinder : MonoBehaviour
 {
 
@@ -24,6 +27,12 @@ public class Pathfinder : MonoBehaviour
     public Color pathColor = Color.cyan;
     public Color arrowColor = Color.cyan;
     public Color highLightColor = Color.cyan;
+
+    [Header("FLAGS")]
+    public bool showIterations;
+    public bool showColor;
+    public bool showArrow;
+    public bool exitOnGoal;
 
     public bool isComplete = false;
     private int m_iterations = 0;
@@ -93,6 +102,9 @@ public class Pathfinder : MonoBehaviour
 
     public IEnumerator SearchRoutine(float timeStamp = 0.1f)
     {
+        yield return null;
+        float timeStart = Time.time;
+
         while (!isComplete)
         {
             if (m_frontierNodes.Count > 0)
@@ -107,21 +119,47 @@ public class Pathfinder : MonoBehaviour
 
                 ExpandFrontier(currentNode);
 
-                ColorNodes();
-                m_graphView.ShowNodeArrow(m_frontierNodes.ToList(), arrowColor);
-
                 if (m_frontierNodes.Contains(m_goalNode))
                 {
-                    m_pathNodes = GetPathNodes(m_goalNode);
-                    m_graphView.ShowNodeArrow(m_pathNodes, highLightColor);
+                    m_pathNodes = GetPathNodes(m_goalNode); 
+                    
+                    if (exitOnGoal)
+                    {
+                        isComplete = true;
+                    }
                 }
-                
-                yield return new WaitForSeconds(timeStamp);
+
+                if (showIterations)
+                {
+                    ShowDiagnostics();
+                    yield return new WaitForSeconds(timeStamp);
+                }
             }
             else
             {
                 isComplete = true;
             }
+        }
+
+        ShowDiagnostics(); // If you only want colors and Arrows but not in each interation.
+        Debug.Log("PATHFINDER SearchRoutine Elapsed Time : " + (Time.time - timeStart).ToString() + " seconds!");
+    }
+
+    private void ShowDiagnostics()
+    {
+        if (showArrow)
+        {
+            m_graphView.ShowNodeArrow(m_frontierNodes.ToList(), arrowColor);
+        }
+
+        if (m_frontierNodes.Contains(m_goalNode) && showArrow)
+        {
+            m_graphView.ShowNodeArrow(m_pathNodes, highLightColor);
+        }
+
+        if (showColor)
+        {
+            ColorNodes();
         }
     }
 
