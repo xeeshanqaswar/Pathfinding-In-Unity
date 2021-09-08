@@ -17,6 +17,8 @@ public class DemoController : MonoBehaviour
     public Vector2Int startNode;
     public Vector2Int goalNode;
 
+    public float TimeStamp;
+
     private void Start()
     {
 
@@ -31,11 +33,13 @@ public class DemoController : MonoBehaviour
             {
                 graphView.Init(graph);
             }
-            bool first = graph.IsWithinBounds(startNode.x, startNode.y);
-            bool second = graph.IsWithinBounds(goalNode.x, goalNode.y);
-            if (first && second && pathFinder != null)
+
+            if (graph.IsWithinBounds(startNode.x, startNode.y) && 
+                graph.IsWithinBounds(goalNode.x, goalNode.y) && 
+                pathFinder != null)
             {
                 pathFinder.Init(graph, graphView, graph.nodes[startNode.x, startNode.y], graph.nodes[goalNode.x, goalNode.y]);
+                StartCoroutine(pathFinder.SearchRoutine(TimeStamp));
             }
 
         }

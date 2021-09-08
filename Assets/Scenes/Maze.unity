@@ -261,6 +261,7 @@ MonoBehaviour:
   pathFinder: {fileID: 1933079199}
   startNode: {x: 0, y: 0}
   goalNode: {x: 15, y: 3}
+  TimeStamp: 0.2
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,3 +501,4 @@ MonoBehaviour:
   frontierColor: {r: 1, g: 0, b: 1, a: 1}
   exploredColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   pathColor: {r: 0, g: 1, b: 1, a: 1}
+  isComplete: 0

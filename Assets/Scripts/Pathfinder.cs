@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Linq;
 
 public class Pathfinder : MonoBehaviour
 {
@@ -21,6 +23,9 @@ public class Pathfinder : MonoBehaviour
     public Color exploredColor = Color.gray;
     public Color pathColor = Color.cyan;
 
+    public bool isComplete = false;
+    private int m_iterations = 0;
+
     public void Init(Graph graph, GraphView graphView, Node start, Node goal)
     {
         if (graph == null || graphView == null || start == null || goal == null)
@@ -28,7 +33,7 @@ public class Pathfinder : MonoBehaviour
             Debug.LogWarning("PATHFINDER Init error : missing Components");
             return;
         }
-
+        
         if (start.nodeType == NodeType.Blocked || goal.nodeType == NodeType.Blocked)
         {
             Debug.LogWarning("PATHFINDER Init error : Start and Goal must be unblocked");
@@ -40,17 +45,7 @@ public class Pathfinder : MonoBehaviour
         m_graph = graph;
         m_graphView = graphView;
 
-        NodeView startNodeView = m_graphView.nodeViews[m_startNode.xIndex, m_startNode.yIndex];
-        if (startNodeView != null)
-        {
-            startNodeView.ColorNode(startColor);
-        }
-        
-        NodeView goalNodeView = m_graphView.nodeViews[m_goalNode.xIndex, m_goalNode.yIndex];
-        if (goalNodeView != null)
-        {
-            goalNodeView.ColorNode(goalColor);
-        }
+        ColorNodes();
 
         m_frontierNodes = new Queue<Node>();
         m_frontierNodes.Enqueue(m_startNode);
@@ -58,7 +53,75 @@ public class Pathfinder : MonoBehaviour
         m_exploredNodes = new List<Node>();
         m_pathNodes = new List<Node>();
 
+        // Reset Pathfinding....
         m_graph.ResetPreviousPathfinding();
+        isComplete = false;
+        m_iterations = 0;
+    }
+
+    private void ColorNodes()
+    {
+        if (m_frontierNodes != null)
+        {
+            m_graphView.ColorNodes(m_frontierNodes.ToList(), frontierColor);
+        }
+
+        if (m_exploredNodes != null)
+        {
+            m_graphView.ColorNodes(m_exploredNodes, exploredColor);
+        }
+
+        NodeView startNodeView = m_graphView.nodeViews[m_startNode.xIndex, m_startNode.yIndex];
+        if (startNodeView != null)
+        {
+            startNodeView.ColorNode(startColor);
+        }
+
+        NodeView goalNodeView = m_graphView.nodeViews[m_goalNode.xIndex, m_goalNode.yIndex];
+        if (goalNodeView != null)
+        {
+            goalNodeView.ColorNode(goalColor);
+        }
+    }
+
+    public IEnumerator SearchRoutine(float timeStamp = 0.1f)
+    {
+        while (!isComplete)
+        {
+            if (m_frontierNodes.Count > 0)
+            {
+                Node currentNode = m_frontierNodes.Dequeue();
+                m_iterations++;
+
+                if (!m_exploredNodes.Contains(currentNode))
+                {
+                    m_exploredNodes.Add(currentNode);
+                }
+
+                ExpandFrontier(currentNode);
+                ColorNodes();
+                m_graphView.ShowNodeArrow(m_frontierNodes.ToList());
+                
+                yield return new WaitForSeconds(timeStamp);
+            }
+            else
+            {
+                isComplete = true;
+            }
+        }
+    }
+
+    private void ExpandFrontier(Node node)
+    {
+        for (int i = 0; i < node.neighbours.Count; i++)
+        {
+            if (!m_frontierNodes.Contains(node.neighbours[i]) &&
+                !m_exploredNodes.Contains(node.neighbours[i]))
+            {
+                node.neighbours[i].previous = node;
+                m_frontierNodes.Enqueue(node.neighbours[i]);
+            }
+        }
     }
 
     
