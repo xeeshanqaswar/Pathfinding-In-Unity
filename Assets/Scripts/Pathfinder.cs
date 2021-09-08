@@ -22,6 +22,8 @@ public class Pathfinder : MonoBehaviour
     public Color frontierColor = Color.magenta;
     public Color exploredColor = Color.gray;
     public Color pathColor = Color.cyan;
+    public Color arrowColor = Color.cyan;
+    public Color highLightColor = Color.cyan;
 
     public bool isComplete = false;
     private int m_iterations = 0;
@@ -71,6 +73,11 @@ public class Pathfinder : MonoBehaviour
             m_graphView.ColorNodes(m_exploredNodes, exploredColor);
         }
 
+        if (m_pathNodes != null && m_pathNodes.Count > 0)
+        {
+            m_graphView.ColorNodes(m_pathNodes, pathColor);
+        }
+
         NodeView startNodeView = m_graphView.nodeViews[m_startNode.xIndex, m_startNode.yIndex];
         if (startNodeView != null)
         {
@@ -99,8 +106,15 @@ public class Pathfinder : MonoBehaviour
                 }
 
                 ExpandFrontier(currentNode);
+
                 ColorNodes();
-                m_graphView.ShowNodeArrow(m_frontierNodes.ToList());
+                m_graphView.ShowNodeArrow(m_frontierNodes.ToList(), arrowColor);
+
+                if (m_frontierNodes.Contains(m_goalNode))
+                {
+                    m_pathNodes = GetPathNodes(m_goalNode);
+                    m_graphView.ShowNodeArrow(m_pathNodes, highLightColor);
+                }
                 
                 yield return new WaitForSeconds(timeStamp);
             }
@@ -124,6 +138,26 @@ public class Pathfinder : MonoBehaviour
         }
     }
 
-    
+    List<Node> GetPathNodes(Node endNode)
+    {
+        List<Node> path = new List<Node>();
+
+        if (endNode == null)
+        {
+            return path;
+        }
+
+        path.Add(endNode);
+
+        Node currentNode = endNode.previous;
+
+        while(currentNode != null)
+        {
+            path.Insert(0, currentNode);
+            currentNode = currentNode.previous;
+        }
+
+        return path;
+    }
 
 }

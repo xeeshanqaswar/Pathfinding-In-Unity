@@ -34,13 +34,18 @@ public class NodeView : MonoBehaviour
         }
     }
 
-    public void ShowArrow()
+    public void ShowArrow( Color color)
     {
         if (m_node != null && arrow !=null && m_node.previous!= null)
         {
             EnableObject(arrow,true);
             Vector3 dirToPrevious = m_node.previous.position - m_node.position;
             arrow.transform.rotation = Quaternion.LookRotation(dirToPrevious.normalized);
+
+            if (arrow.TryGetComponent<Renderer>(out Renderer rend))
+            {
+                rend.material.color = color;
+            }
         }
     }
 

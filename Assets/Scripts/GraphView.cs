@@ -56,24 +56,25 @@ public class GraphView : MonoBehaviour
             }
         }
     }
+    public void ShowNodeArrow(List<Node> nodeList, Color color)
+    {
+        foreach (Node node in nodeList)
+        {
+            ShowNodeArrow(node, color);
+        }
+    }
 
-    public void ShowNodeArrow(Node n)
+    public void ShowNodeArrow(Node n, Color color)
     {
         if (n != null)
         {
             NodeView nodeView = nodeViews[n.xIndex, n.yIndex];
             if (nodeView != null)
             {
-                nodeView.ShowArrow();
+                nodeView.ShowArrow(color);
             }
         }
     }
-    public void ShowNodeArrow(List<Node> nodeList)
-    {
-        foreach (Node node in nodeList)
-        {
-            ShowNodeArrow(node);
-        }
-    }
+    
 
 }
