@@ -7,18 +7,14 @@ using System.Linq;
 // BFS TREE : Explore each node before reaching goal. 
 
 
+public enum Mode
+{
+    BreadthFirstSearch, Dijkstra
+}
+
 public class Pathfinder : MonoBehaviour
 {
-
-    private Node m_startNode;
-    private Node m_goalNode;
-    private Graph m_graph;
-    private GraphView m_graphView;
-
-    private Queue<Node> m_frontierNodes;
-    private List<Node> m_exploredNodes;
-    private List<Node> m_pathNodes;
-
+    public Mode mode = Mode.BreadthFirstSearch;
 
     public Color startColor = Color.green;
     public Color goalColor = Color.red;
@@ -37,6 +33,16 @@ public class Pathfinder : MonoBehaviour
     public bool isComplete = false;
     private int m_iterations = 0;
 
+    private Node m_startNode;
+    private Node m_goalNode;
+    private Graph m_graph;
+    private GraphView m_graphView;
+
+    private Queue<Node> m_frontierNodes;
+    private List<Node> m_exploredNodes;
+    private List<Node> m_pathNodes;
+
+    
     public void Init(Graph graph, GraphView graphView, Node start, Node goal)
     {
         if (graph == null || graphView == null || start == null || goal == null)
@@ -68,6 +74,7 @@ public class Pathfinder : MonoBehaviour
         m_graph.ResetPreviousPathfinding();
         isComplete = false;
         m_iterations = 0;
+        m_startNode.distanceTravelled = 0;
     }
 
     private void ColorNodes()
@@ -117,7 +124,15 @@ public class Pathfinder : MonoBehaviour
                     m_exploredNodes.Add(currentNode);
                 }
 
-                ExpandFrontier(currentNode);
+                if (mode == Mode.BreadthFirstSearch)
+                {
+                    ExpandFrontierBreadthFirst(currentNode);
+                }
+                else if (mode == Mode.Dijkstra)
+                {
+                    ExpandFrontierDijkstra(currentNode);
+                }
+
 
                 if (m_frontierNodes.Contains(m_goalNode))
                 {
@@ -126,6 +141,7 @@ public class Pathfinder : MonoBehaviour
                     if (exitOnGoal)
                     {
                         isComplete = true;
+                        Debug.Log("PATHFINDER mode : " + mode.ToString() + " distane travelled : " + m_goalNode.distanceTravelled );
                     }
                 }
 
@@ -163,15 +179,45 @@ public class Pathfinder : MonoBehaviour
         }
     }
 
-    private void ExpandFrontier(Node node)
+    private void ExpandFrontierBreadthFirst(Node node)
     {
         for (int i = 0; i < node.neighbours.Count; i++)
         {
             if (!m_frontierNodes.Contains(node.neighbours[i]) &&
                 !m_exploredNodes.Contains(node.neighbours[i]))
             {
+                float distanceToNeighbour = m_graph.GetNodeDistance(node, node.neighbours[i]);
+                float newDistanceTravelled = distanceToNeighbour + node.distanceTravelled;
+                node.neighbours[i].distanceTravelled = newDistanceTravelled;
+
                 node.neighbours[i].previous = node;
                 m_frontierNodes.Enqueue(node.neighbours[i]);
+            }
+        }
+    }
+
+    private void ExpandFrontierDijkstra(Node node)
+    {
+        for (int i = 0; i < node.neighbours.Count; i++)
+        {
+            if (!m_exploredNodes.Contains(node.neighbours[i]))
+            {
+                float distanceToNeighbour = m_graph.GetNodeDistance(node, node.neighbours[i]);
+                float newDistanceTravelled = distanceToNeighbour + node.distanceTravelled;
+
+                // if Neighbour node distance is Infinity i.e. initial distance or
+                // newDistance is smaller than previous distance.
+                if (float.IsPositiveInfinity(node.neighbours[i].distanceTravelled) ||
+                    newDistanceTravelled < node.neighbours[i].distanceTravelled)
+                {
+                    node.neighbours[i].previous = node;
+                    node.neighbours[i].distanceTravelled = newDistanceTravelled;
+                }
+
+                if (!m_frontierNodes.Contains(node.neighbours[i]))
+                {
+                    m_frontierNodes.Enqueue(node.neighbours[i]);
+                }
             }
         }
     }

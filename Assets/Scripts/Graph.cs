@@ -90,7 +90,6 @@ public class Graph : MonoBehaviour
         return neighbourNodes;
     }
 
-
     public List<Node> GetNeighbours(int x, int y)
     {
         return GetNeighbours(x, y, nodes, allDirections);
@@ -112,5 +111,24 @@ public class Graph : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method to determine the distance btw any two unobstructed Nodes.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    public float GetNodeDistance(Node source, Node target)
+    {
+        int dx = Mathf.Abs(source.xIndex - target.xIndex);
+        int dy = Mathf.Abs(source.yIndex - target.yIndex);
+
+        int min = Mathf.Min(dy, dx);
+        int max = Mathf.Max(dy, dx);
+
+        int diagonalSteps = min;
+        int straightSteps = max - min;
+
+        return (1.4f * diagonalSteps + straightSteps);
+    }
 
 }
