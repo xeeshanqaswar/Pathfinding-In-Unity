@@ -38,7 +38,7 @@ public class Pathfinder : MonoBehaviour
     private Graph m_graph;
     private GraphView m_graphView;
 
-    private Queue<Node> m_frontierNodes;
+    private PriorityQueue<Node> m_frontierNodes;
     private List<Node> m_exploredNodes;
     private List<Node> m_pathNodes;
 
@@ -64,7 +64,7 @@ public class Pathfinder : MonoBehaviour
 
         ColorNodes();
 
-        m_frontierNodes = new Queue<Node>();
+        m_frontierNodes = new PriorityQueue<Node>();
         m_frontierNodes.Enqueue(m_startNode);
 
         m_exploredNodes = new List<Node>();
@@ -191,6 +191,8 @@ public class Pathfinder : MonoBehaviour
                 node.neighbours[i].distanceTravelled = newDistanceTravelled;
 
                 node.neighbours[i].previous = node;
+                node.neighbours[i].priority = m_exploredNodes.Count; // Trick to use Priority Queue with BFS
+
                 m_frontierNodes.Enqueue(node.neighbours[i]);
             }
         }
@@ -216,6 +218,7 @@ public class Pathfinder : MonoBehaviour
 
                 if (!m_frontierNodes.Contains(node.neighbours[i]))
                 {
+                    node.neighbours[i].priority = (int)node.neighbours[i].distanceTravelled;
                     m_frontierNodes.Enqueue(node.neighbours[i]);
                 }
             }
