@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEditor;
+using System.Linq;
 
 // Result of this Script is 2d Array with 0s and 1s which define Map 
 // 0s define open Nodes while 1s define walls
@@ -16,8 +18,18 @@ public class MapData : MonoBehaviour
     public Texture2D textureMap;
     public string ResourcePath = "Mapdata";
 
+    public Color32 openColor = Color.white;
+    public Color32 blockedColor = Color.black;
+    public Color32 lightTerrainColor = new Color32(124,194,78,255);
+    public Color32 mediumTerrainColor = new Color32(252, 255, 52, 255);
+    public Color32 heavyTerrainColor = new Color32(255, 129, 12, 255);
+
+    static Dictionary<Color32, NodeType> terrainLookupTable = new Dictionary<Color32, NodeType>();
+
     private void Awake()
     {
+        SetUpLookupTable();
+
         if (textureMap == null)
         {
             textureMap = Resources.Load(ResourcePath + "/TextureMaze") as Texture2D;
@@ -65,17 +77,16 @@ public class MapData : MonoBehaviour
             string line = "";
             for (int x = 0; x < texture.width; x++)
             {
-                if (texture.GetPixel(x, y) == Color.black)
+                Color pixelColor = texture.GetPixel(x,y);
+                if (terrainLookupTable.ContainsKey(pixelColor))
                 {
-                    line += "1";
-                }
-                else if(texture.GetPixel(x, y) == Color.white)
-                {
-                    line += "0";
+                    NodeType nodeType = terrainLookupTable[pixelColor];
+                    int nodeTypeNum = (int)nodeType;
+                    line += nodeTypeNum; 
                 }
                 else
                 {
-                    line += " ";
+                    line += '0';
                 }
             }
 
@@ -128,4 +139,21 @@ public class MapData : MonoBehaviour
         return map;
     }
 
+    private void SetUpLookupTable()
+    {
+        terrainLookupTable.Add(openColor, NodeType.Open);
+        terrainLookupTable.Add(blockedColor, NodeType.Blocked);
+        terrainLookupTable.Add(lightTerrainColor, NodeType.LightTerrain);
+        terrainLookupTable.Add(mediumTerrainColor, NodeType.MediumTerrain);
+        terrainLookupTable.Add(heavyTerrainColor, NodeType.HeavyTerrain);
+    }
+
+    public static Color GetColorFromNodeType(NodeType type)
+    {
+        if (terrainLookupTable.ContainsValue(type))
+        {
+            return terrainLookupTable.FirstOrDefault(x => x.Value == type).Key;
+        }
+        return Color.white;
+    }
 }

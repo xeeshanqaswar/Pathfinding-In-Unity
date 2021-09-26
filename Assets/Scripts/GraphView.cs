@@ -9,8 +9,6 @@ using UnityEngine;
 public class GraphView : MonoBehaviour
 {
     public GameObject nodeViewPrefab;
-    public Color baseColor = Color.white;
-    public Color wallColor = Color.black;
 
     public NodeView[,] nodeViews;
     public void Init(Graph graph)
@@ -30,32 +28,34 @@ public class GraphView : MonoBehaviour
             {
                 nodeViews[n.xIndex, n.yIndex] = nodeView;
                 nodeView.Init(n);
-                if (n.nodeType == NodeType.Blocked)
-                {
-                    nodeView.ColorNode(wallColor);
-                }
-                else
-                {
-                    nodeView.ColorNode(baseColor);
-                }
+                nodeView.ColorNode(MapData.GetColorFromNodeType(n.nodeType));
             }
         }
     }
 
-    public void ColorNodes(List<Node> nodes, Color color)
+    public void ColorNodes(List<Node> nodes, Color color, bool lerpColor = false, float lerpValue = 0.5f)
     {
         foreach (Node n in nodes)
         {
             if (n!= null)
             {
                 NodeView nodeView = nodeViews[n.xIndex, n.yIndex];
+                Color newColor = color;
+
+                if (lerpColor)
+                {
+                    Color originalColor = MapData.GetColorFromNodeType(n.nodeType);
+                    newColor = Color.Lerp(originalColor,newColor, lerpValue);
+                }
+
                 if (nodeView != null)
                 {
-                    nodeView.ColorNode(color);
+                    nodeView.ColorNode(newColor);
                 }
             }
         }
     }
+
     public void ShowNodeArrow(List<Node> nodeList, Color color)
     {
         foreach (Node node in nodeList)
@@ -76,5 +76,4 @@ public class GraphView : MonoBehaviour
         }
     }
     
-
 }

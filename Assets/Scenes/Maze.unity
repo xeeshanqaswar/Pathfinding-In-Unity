@@ -260,7 +260,7 @@ MonoBehaviour:
   graph: {fileID: 1157168453}
   pathFinder: {fileID: 1933079199}
   startNode: {x: 0, y: 0}
-  goalNode: {x: 62, y: 20}
+  goalNode: {x: 25, y: 15}
   TimeStamp: 0.005
 --- !u!1 &963194225
 GameObject:
@@ -403,8 +403,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeViewPrefab: {fileID: 8064800074523975263, guid: 0230a902905b69e49a520681a5d889b2,
     type: 3}
-  baseColor: {r: 1, g: 1, b: 1, a: 1}
-  wallColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &1752724386
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,8 +435,23 @@ MonoBehaviour:
   width: 10
   height: 5
   mazeData: {fileID: 0}
-  textureMap: {fileID: 2800000, guid: 8eed777a78fb63a4d9e873863ddd27e8, type: 3}
+  textureMap: {fileID: 2800000, guid: 362692e41b050ce47938a77d2b60c0af, type: 3}
   ResourcePath: Mapdata
+  openColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  blockedColor:
+    serializedVersion: 2
+    rgba: 4278190080
+  lightTerrainColor:
+    serializedVersion: 2
+    rgba: 4283351676
+  mediumTerrainColor:
+    serializedVersion: 2
+    rgba: 4281663484
+  heavyTerrainColor:
+    serializedVersion: 2
+    rgba: 4279009791
 --- !u!4 &1752724388
 Transform:
   m_ObjectHideFlags: 0
@@ -496,7 +509,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ef63217f2c981444bef1124d93fc8fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 0
+  mode: 1
   startColor: {r: 0, g: 1, b: 0, a: 1}
   goalColor: {r: 1, g: 0, b: 0, a: 1}
   frontierColor: {r: 1, g: 0, b: 1, a: 1}
