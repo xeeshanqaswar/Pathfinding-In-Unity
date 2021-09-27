@@ -5,11 +5,12 @@ using System;
 using System.Linq;
 
 // BFS TREE : Explore each node before reaching goal. 
-
+// BFS GREEDY : use Hueristics.
+// AStar : fCost = Gcost(distance from start) + Hcost(distance to Goal)
 
 public enum Mode
 {
-    BreadthFirstSearch, Dijkstra, GreedyBestFirst
+    BreadthFirstSearch, Dijkstra, GreedyBestFirst, AStar
 }
 
 public class Pathfinder : MonoBehaviour
@@ -137,6 +138,10 @@ public class Pathfinder : MonoBehaviour
                 {
                     ExpandFrontierGreedyBreadthFirst(currentNode);
                 }
+                else if (mode == Mode.AStar)
+                {
+                    ExpandFrontierAstar(currentNode);
+                }
 
                 #endregion
 
@@ -244,6 +249,35 @@ public class Pathfinder : MonoBehaviour
                 if (!m_frontierNodes.Contains(node.neighbours[i]))
                 {
                     node.neighbours[i].priority = (int)node.neighbours[i].distanceTravelled;
+                    m_frontierNodes.Enqueue(node.neighbours[i]);
+                }
+            }
+        }
+    }
+
+    private void ExpandFrontierAstar(Node node)
+    {
+        for (int i = 0; i < node.neighbours.Count; i++)
+        {
+            if (!m_exploredNodes.Contains(node.neighbours[i]))
+            {
+                float distanceToNeighbour = m_graph.GetNodeDistance(node, node.neighbours[i]);
+                float newDistanceTravelled = distanceToNeighbour + node.distanceTravelled + (int)node.neighbours[i].nodeType;
+
+                // if Neighbour node distance is Infinity i.e. initial distance or
+                // newDistance is smaller than previous distance.
+                if (float.IsPositiveInfinity(node.neighbours[i].distanceTravelled) ||
+                    newDistanceTravelled < node.neighbours[i].distanceTravelled)
+                {
+                    node.neighbours[i].previous = node;
+                    node.neighbours[i].distanceTravelled = newDistanceTravelled;
+                }
+
+                if (!m_frontierNodes.Contains(node.neighbours[i]))
+                {
+                    int gcost = (int)node.neighbours[i].distanceTravelled;
+                    int hcost = (int)m_graph.GetNodeDistance(node.neighbours[i], m_goalNode);
+                    node.neighbours[i].priority = gcost + hcost;
                     m_frontierNodes.Enqueue(node.neighbours[i]);
                 }
             }
