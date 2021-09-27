@@ -23,7 +23,7 @@ public class Node :IComparable<Node>
 
     public List<Node> neighbours = new List<Node>();
 
-    public int priority;
+    public float priority;
     public float distanceTravelled = Mathf.Infinity;
     public Node previous = null;
 

@@ -221,7 +221,7 @@ public class Pathfinder : MonoBehaviour
                 node.neighbours[i].distanceTravelled = newDistanceTravelled;
 
                 node.neighbours[i].previous = node;
-                node.neighbours[i].priority = (int)m_graph.GetNodeDistance(node.neighbours[i],m_goalNode);
+                node.neighbours[i].priority = m_graph.GetNodeDistance(node.neighbours[i],m_goalNode);
 
                 m_frontierNodes.Enqueue(node.neighbours[i]);
             }
@@ -248,7 +248,7 @@ public class Pathfinder : MonoBehaviour
 
                 if (!m_frontierNodes.Contains(node.neighbours[i]))
                 {
-                    node.neighbours[i].priority = (int)node.neighbours[i].distanceTravelled;
+                    node.neighbours[i].priority = node.neighbours[i].distanceTravelled;
                     m_frontierNodes.Enqueue(node.neighbours[i]);
                 }
             }
@@ -275,8 +275,8 @@ public class Pathfinder : MonoBehaviour
 
                 if (!m_frontierNodes.Contains(node.neighbours[i]))
                 {
-                    int gcost = (int)node.neighbours[i].distanceTravelled;
-                    int hcost = (int)m_graph.GetNodeDistance(node.neighbours[i], m_goalNode);
+                    float gcost = node.neighbours[i].distanceTravelled;
+                    float hcost = m_graph.GetNodeDistance(node.neighbours[i], m_goalNode);
                     node.neighbours[i].priority = gcost + hcost;
                     m_frontierNodes.Enqueue(node.neighbours[i]);
                 }
