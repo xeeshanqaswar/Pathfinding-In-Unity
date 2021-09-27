@@ -116,14 +116,15 @@ public class Pathfinder : MonoBehaviour
         {
             if (m_frontierNodes.Count > 0)
             {
-                Node currentNode = m_frontierNodes.Dequeue();
                 m_iterations++;
+                Node currentNode = m_frontierNodes.Dequeue();
 
                 if (!m_exploredNodes.Contains(currentNode))
                 {
                     m_exploredNodes.Add(currentNode);
                 }
 
+                #region DECIDE WHICH ALGORITHM RUNS
                 if (mode == Mode.BreadthFirstSearch)
                 {
                     ExpandFrontierBreadthFirst(currentNode);
@@ -132,7 +133,7 @@ public class Pathfinder : MonoBehaviour
                 {
                     ExpandFrontierDijkstra(currentNode);
                 }
-
+                #endregion
 
                 if (m_frontierNodes.Contains(m_goalNode))
                 {
@@ -225,7 +226,7 @@ public class Pathfinder : MonoBehaviour
         }
     }
 
-    List<Node> GetPathNodes(Node endNode)
+    private List<Node> GetPathNodes(Node endNode)
     {
         List<Node> path = new List<Node>();
 
@@ -240,7 +241,7 @@ public class Pathfinder : MonoBehaviour
 
         while(currentNode != null)
         {
-            path.Insert(0, currentNode);
+            path.Insert(0, currentNode); // Inserting elements at start and pushing other elements down
             currentNode = currentNode.previous;
         }
 
