@@ -111,7 +111,7 @@ public class Pathfinder : MonoBehaviour
     public IEnumerator SearchRoutine(float timeStamp = 0.1f)
     {
         yield return null;
-        float timeStart = Time.time;
+        float timeStart = Time.realtimeSinceStartup;
 
         while (!isComplete)
         {
@@ -169,7 +169,7 @@ public class Pathfinder : MonoBehaviour
         }
 
         ShowDiagnostics(true, 0.5f); // If you only want colors and Arrows but not in each interation.
-        Debug.Log("PATHFINDER SearchRoutine Elapsed Time : " + (Time.time - timeStart).ToString() + " seconds!");
+        Debug.Log("PATHFINDER SearchRoutine Elapsed Time : " + (Time.realtimeSinceStartup - timeStart).ToString() + " seconds!");
     }
 
     private void ShowDiagnostics(bool lerpColor = false, float lerpValue = 0.5f)
