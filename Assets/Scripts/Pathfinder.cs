@@ -9,7 +9,7 @@ using System.Linq;
 
 public enum Mode
 {
-    BreadthFirstSearch, Dijkstra
+    BreadthFirstSearch, Dijkstra, GreedyBestFirst
 }
 
 public class Pathfinder : MonoBehaviour
@@ -133,6 +133,11 @@ public class Pathfinder : MonoBehaviour
                 {
                     ExpandFrontierDijkstra(currentNode);
                 }
+                else if (mode == Mode.GreedyBestFirst)
+                {
+                    ExpandFrontierGreedyBreadthFirst(currentNode);
+                }
+
                 #endregion
 
                 if (m_frontierNodes.Contains(m_goalNode))
@@ -193,6 +198,25 @@ public class Pathfinder : MonoBehaviour
 
                 node.neighbours[i].previous = node;
                 node.neighbours[i].priority = m_exploredNodes.Count; // Trick to use Priority Queue with BFS
+
+                m_frontierNodes.Enqueue(node.neighbours[i]);
+            }
+        }
+    }
+
+    private void ExpandFrontierGreedyBreadthFirst(Node node)
+    {
+        for (int i = 0; i < node.neighbours.Count; i++)
+        {
+            if (!m_frontierNodes.Contains(node.neighbours[i]) &&
+                !m_exploredNodes.Contains(node.neighbours[i]))
+            {
+                float distanceToNeighbour = m_graph.GetNodeDistance(node, node.neighbours[i]);
+                float newDistanceTravelled = distanceToNeighbour + node.distanceTravelled + (int)node.neighbours[i].nodeType;
+                node.neighbours[i].distanceTravelled = newDistanceTravelled;
+
+                node.neighbours[i].previous = node;
+                node.neighbours[i].priority = (int)m_graph.GetNodeDistance(node.neighbours[i],m_goalNode);
 
                 m_frontierNodes.Enqueue(node.neighbours[i]);
             }
