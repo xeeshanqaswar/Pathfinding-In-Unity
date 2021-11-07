@@ -1,4 +1,4 @@
-### Pathfinding implementation in Unity.
+# Pathfinding implementation in Unity.
 
 ## Search Algorithm: Dijkstra
 
